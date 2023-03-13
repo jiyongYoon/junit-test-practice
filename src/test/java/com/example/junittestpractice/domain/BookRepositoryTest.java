@@ -1,38 +1,81 @@
 package com.example.junittestpractice.domain;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DataJpaTest // DB와 관련된 컴포넌트만 메모리에 로딩함.
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DataJpaTest(showSql = false) // DB와 관련된 컴포넌트만 메모리에 로딩함.
 class BookRepositoryTest {
 
     @Autowired // DI
     private BookRepository bookRepository;
 
-    @Test
-    @DisplayName("책 등록 Test")
-    public void saveTest() {
-        // given
-        String title = "제목1";
-        String author = "작가1";
+    String title = "제목1";
+    String author = "작가1";
+
+    @BeforeAll // 테스트 시작 전 한번만 실행
+//    @BeforeEach // 각 테스트 시작 전 실행
+    public void givenBook() {
         Book book = Book.builder()
                 .title(title)
                 .author(author)
                 .build();
+        bookRepository.save(book);
+    }
+
+    @Test
+    @DisplayName("책 등록 Test")
+    public void saveTest() {
+        // given
+        Book book = Book.builder()
+                .title(title)
+                .author(author)
+                .build();
+
         // when
         Book savedBook = bookRepository.save(book);
+
         // then
         assertEquals(title, savedBook.getTitle());
         assertEquals(author, savedBook.getAuthor());
     }
 
-    // 2. 책 목록보기
+    @Test
+    @DisplayName("책 목록보기 Test")
+    public void getAllBookTest() {
+        // given
 
-    // 3. 책 한건보기
+        // when
+        List<Book> books = bookRepository.findAll();
+
+        //then
+        assertEquals(title, books.get(0).getTitle());
+        assertEquals(author, books.get(0).getAuthor());
+    }
+
+    @Test
+    @DisplayName("책 한건보기 Test")
+    public void getBookTest() {
+        // given
+//        Book book = Book.builder()
+//                .title(title)
+//                .author(author)
+//                .build();
+//        Book savedBook = bookRepository.save(book);
+
+        // when
+//        Book findBook = bookRepository.findById(savedBook.getId()).get();
+        Book findBook = bookRepository.findById(1L).get();
+
+        // then
+        assertEquals(findBook.getTitle(), title);
+        assertEquals(findBook.getAuthor(), author);
+    }
 
     // 4. 책 수정
 
