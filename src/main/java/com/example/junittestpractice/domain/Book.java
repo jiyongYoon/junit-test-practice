@@ -1,5 +1,6 @@
 package com.example.junittestpractice.domain;
 
+import com.example.junittestpractice.web.dto.BookReqDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,5 +21,11 @@ public class Book {
     @Column(length = 50, nullable = false)
     private String title;
     private String author;
+
+    public Book update(BookReqDto bookReqDto) {
+        this.title = bookReqDto.getTitle();
+        this.author = bookReqDto.getAuthor();
+        return this;
+    }
 
 }
