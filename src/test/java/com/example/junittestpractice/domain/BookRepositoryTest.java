@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -99,5 +100,25 @@ class BookRepositoryTest {
     }
 
     // 5. 책 수정
+    @Test
+    @Order(5)
+    @DisplayName("책 수정 Test")
+    public void updateBookTest() {
+        // given
+        Long id = 1L;
+        Book newBook = Book.builder()
+                .id(id)
+                .author("수정작가")
+                .title("수정제목")
+                .build();
+
+        // when
+        Book savedBook = bookRepository.save(newBook);
+
+        // then
+        assertEquals(savedBook.getId(), newBook.getId());
+        assertEquals(savedBook.getAuthor(), newBook.getAuthor());
+        assertEquals(savedBook.getTitle(), newBook.getTitle());
+    }
 
 }
