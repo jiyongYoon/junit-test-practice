@@ -7,8 +7,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest(showSql = false) // DB와 관련된 컴포넌트만 메모리에 로딩함.
 class BookRepositoryTest {
 
@@ -26,9 +28,11 @@ class BookRepositoryTest {
                 .author(author)
                 .build();
         bookRepository.save(book);
+        System.out.println("========== save one book ==========");
     }
 
     @Test
+    @Order(1)
     @DisplayName("책 등록 Test")
     public void saveTest() {
         // given
@@ -46,6 +50,7 @@ class BookRepositoryTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("책 목록보기 Test")
     public void getAllBookTest() {
         // given
@@ -59,6 +64,7 @@ class BookRepositoryTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("책 한건보기 Test")
     public void getBookTest() {
         // given
@@ -77,8 +83,21 @@ class BookRepositoryTest {
         assertEquals(findBook.getAuthor(), author);
     }
 
-    // 4. 책 수정
+    // 4. 책 삭제
+    @Test
+    @Order(4)
+    @DisplayName("책 삭제 Test")
+    public void deleteBookTest() {
+        // given
+        Long id = 1L;
 
-    // 5. 책 삭제
+        // when
+        bookRepository.deleteById(id);
+
+        // then
+        assertFalse(bookRepository.findById(id).isPresent());
+    }
+
+    // 5. 책 수정
 
 }

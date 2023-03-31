@@ -25,4 +25,12 @@ Yes. 각 `Layer` 별로 동작을 잘 한다고 해서 모든 `Process`가 잘 �
 ## 4. Junit 테스트 동작
 - 프로젝트를 실행하면 Springboot가 실행되는 것과 다르게, Test를 실행하면 Test 환경이 실행됨.
 - 따라서 필요한 클래스만 메모리에 로드하여 실행함.
-  - Repository : `@DataJpaTest` 를 붙이면 DB와 관련된 컴포넌트만 메모리에 로딩함.
+  - Repository
+    - `@DataJpaTest` 를 붙이면 DB와 관련된 컴포넌트만 메모리에 로딩함.
+    - `@DataJpaTest` 안에  `@Transactional`가 있기 때문에 메서드별로 데이터가 초기화됨.
+      - 데이터는 초기화 되는데, primary_key(auto_increment) 값이 초기화가 안됨.
+
+- 클래스 내의 테스트 메서드는 순서보장이 안됨. 
+  - 테스트 클래스에 `@TestMethodOrder(MethodOrderer.OrderAnnotation.class)`
+  - 테스트 메서드에
+    `@Order`를 사용하면 순서를 지정할 수 있음.
