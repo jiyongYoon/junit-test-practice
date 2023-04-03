@@ -128,3 +128,58 @@ Junit 의존성에 있는 `org.junit.jupiter.api.Assertions` 메서드.
 ### 3) Controller
 
 
+
+
+## 7. 통합 테스트
+- SpringMVC (`Controller` - `Service` - `Repository`) 일련의 과정을 모두 테스트하는 것.
+
+### 순서
+0) 필요한 객체 주입
+    ```java
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class BookApiControllerTest {
+    
+      @Autowired
+      private BookService bookService;
+    
+      @Autowired
+      private TestRestTemplate rt;
+    
+      private static ObjectMapper objectMapper;
+      private static HttpHeaders headers;
+    
+      @BeforeAll
+      void init() {
+        objectMapper = new ObjectMapper();
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+      }
+    }
+    ```
+1) Client가 보낼 Request를 Json 데이터로 만들기
+    ```java
+    BookReqDto bookReqDto = new BookReqDto();
+    bookReqDto.setTitle("제목1");
+    bookReqDto.setAuthor("작가1");
+    
+    String body = objectMapper.writeValueAsString(bookReqDto);
+    ```
+2) Json 데이터를 Http 요청으로 만들어서 보내서 응답값 받기
+    ```java
+    HttpEntity<String> request = new HttpEntity<>(body, headers);
+    
+    ResponseEntity<String> responseEntity =
+            rt.exchange("/api/v1/book", HttpMethod.POST, request, String.class);
+    ```
+3) 응답 받은 Json 값을 parsing 하여 검증하기
+    ```java
+    DocumentContext dc = JsonPath.parse(responseEntity.getBody());
+    String title = dc.read("$.body.title");
+    String author = dc.read("$.body.author");
+    
+    assertThat(title).isEqualTo("제목1");
+    assertThat(author).isEqualTo("작가1");
+    ```
+
+
