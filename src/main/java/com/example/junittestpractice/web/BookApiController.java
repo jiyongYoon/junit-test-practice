@@ -29,7 +29,6 @@ public class BookApiController {
     @PostMapping
     public ResponseEntity<?> createBook(@RequestBody @Valid BookReqDto bookReqDto,
                                         BindingResult bindingResult) {
-
         // 나중에는 AOP 처리하는 것이 좋음
         if (bindingResult.hasErrors()) { // 에러 발생 시 true 리턴
             Map<String, String> errorMap = new HashMap<>();
@@ -37,13 +36,15 @@ public class BookApiController {
                 errorMap.put(fe.getField(), fe.getDefaultMessage());
             }
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(CMResDto.builder()
-                            .code(-1)
-                            .msg(errorMap.toString())
-                            .body(bookReqDto)
-                            .build()
-                    );
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(CMResDto.builder()
+//                            .code(-1)
+//                            .msg(errorMap.toString())
+//                            .body(bookReqDto)
+//                            .build()
+//                    );
+
+            throw new RuntimeException(errorMap.toString());
         }
 
         BookResDto savedBook = bookService.createBook(bookReqDto);
