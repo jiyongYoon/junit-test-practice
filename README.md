@@ -36,4 +36,30 @@ Yes. 각 `Layer` 별로 동작을 잘 한다고 해서 모든 `Process`가 잘 �
     `@Order`를 사용하면 순서를 지정할 수 있음.
 
 - JUnit은 기본적으로 메서드가 실행되면 `Transaction`시작 -> 메서드가 종료되면 `Transaction`종료 -> `RollBack`됨.
-- 
+
+## 5. Junit 검증 메서드 라이브러리
+### 1) 기본 메서드
+Junit 의존성에 있는 `org.junit.jupiter.api.Assertions` 메서드.
+- Test 검증 메서드 예시
+```java
+    assertEquals(savedBook.getTitle(), bookReqDto.getTitle());
+```
+왼쪽과 오른쪽 값이 동일해야 한다는 것은 알지만, 어떤 것이 실행값이고, 어떤 값을 기대하는지 알기가 어렵다.
+
+### 2) assertj
+가독성이 더 좋은 검증 메서드 라이브러리
+- build.gradle
+```groovy
+    testImplementation("org.assertj:assertj-core:3.24.2")
+```
+- import static
+```java
+import static org.assertj.core.api.Assertions.*;
+```
+- Test 검증 메서드 예시
+```java
+    assertThat(savedBook.getTitle()).isEqualTo(bookReqDto.getTitle());
+```
+왼쪽 값이 우리가 `검증하고 싶은` 값이고, 오른쪽 `.isEqualTo`가 어떤 값과 동일해야 하는지를 명시함.
+
+### [assertj 공식 설명 사이트](https://assertj.github.io/doc/)
