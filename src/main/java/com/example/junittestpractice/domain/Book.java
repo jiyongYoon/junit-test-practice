@@ -1,6 +1,6 @@
 package com.example.junittestpractice.domain;
 
-import com.example.junittestpractice.web.dto.BookReqDto;
+import com.example.junittestpractice.web.dto.req.BookReqDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

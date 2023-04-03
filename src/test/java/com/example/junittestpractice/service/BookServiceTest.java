@@ -3,29 +3,22 @@ package com.example.junittestpractice.service;
 import com.example.junittestpractice.domain.Book;
 import com.example.junittestpractice.domain.BookRepository;
 import com.example.junittestpractice.util.MailSender;
-import com.example.junittestpractice.util.MailSenderAdapter;
-import com.example.junittestpractice.web.dto.BookReqDto;
-import com.example.junittestpractice.web.dto.BookResDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.junittestpractice.web.dto.req.BookReqDto;
+import com.example.junittestpractice.web.dto.res.BookResDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.*;
 
 //@DataJpaTest

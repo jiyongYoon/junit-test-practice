@@ -1,8 +1,10 @@
-package com.example.junittestpractice.web.dto;
+package com.example.junittestpractice.web.dto.res;
 
 import com.example.junittestpractice.domain.Book;
 import lombok.Builder;
 import lombok.Getter;
+
+import javax.persistence.Column;
 
 @Builder
 @Getter
