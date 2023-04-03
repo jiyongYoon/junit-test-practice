@@ -25,15 +25,10 @@ Yes. 각 `Layer` 별로 동작을 잘 한다고 해서 모든 `Process`가 잘 �
 ## 4. Junit 테스트 동작
 - 프로젝트를 실행하면 Springboot가 실행되는 것과 다르게, Test를 실행하면 Test 환경이 실행됨.
 - 따라서 필요한 클래스만 메모리에 로드하여 실행함.
-  - Repository
-    - `@DataJpaTest` 를 붙이면 DB와 관련된 컴포넌트만 메모리에 로딩함.
-    - `@DataJpaTest` 안에  `@Transactional`가 있기 때문에 메서드별로 데이터가 초기화됨. (RollBack)
-      - 데이터는 초기화 되는데, primary_key(auto_increment) 값이 초기화가 안됨.
-
-- 클래스 내의 테스트 메서드는 순서보장이 안됨. 
-  - 테스트 클래스에 `@TestMethodOrder(MethodOrderer.OrderAnnotation.class)`
-  - 테스트 메서드에
-    `@Order`를 사용하면 순서를 지정할 수 있음.
+- 클래스 내의 테스트 메서드는 순서보장이 안됨.
+- 테스트 클래스에 `@TestMethodOrder(MethodOrderer.OrderAnnotation.class)`
+- 테스트 메서드에
+  `@Order`를 사용하면 순서를 지정할 수 있음.
 
 - JUnit은 기본적으로 메서드가 실행되면 `Transaction`시작 -> 메서드가 종료되면 `Transaction`종료 -> `RollBack`됨.
 
@@ -63,3 +58,65 @@ import static org.assertj.core.api.Assertions.*;
 왼쪽 값이 우리가 `검증하고 싶은` 값이고, 오른쪽 `.isEqualTo`가 어떤 값과 동일해야 하는지를 명시함.
 
 ### [assertj 공식 설명 사이트](https://assertj.github.io/doc/)
+
+## 6. SpringMVC 패턴에서 각 Layer 별 테스트 코드
+
+### 1) Repository
+- `@DataJpaTest` 를 붙이면 DB와 관련된 컴포넌트만 메모리에 로딩함.
+- `@DataJpaTest` 안에  `@Transactional`가 있기 때문에 메서드별로 데이터가 초기화됨. (RollBack)
+  - 데이터는 초기화 되는데, primary_key(auto_increment) 값이 초기화가 안됨.
+
+### 2) Service
+- Service Layer는 순수한 비즈니스 로직만을 가지고 있게 됨. 따라서, 가짜 메모리 환경에서 가짜 객체들을 주입해주고,
+  그 객체들의 리턴값은 stub 구역에서 정의해줌.
+- `@ExtendWith(MockitoExtension.class)` 를 붙여 가짜 메모리 환경을 구성해줌.
+- Service 객체에 주입할 가짜 객체들을 필드에 `@Mock`과 함께 선언함.
+- Service 객체에 `@InjectMocks` 를 붙여 가짜 객체들을 Service 객체에 주입해줌.
+- 예시 코드
+  ```java
+  @ExtendWith(MockitoExtension.class)
+  class BookServiceTest {
+      
+    @InjectMocks
+    private BookService bookService;
+    
+    @Mock
+    private BookRepository bookRepository;
+    
+    @Mock
+    private MailSender mailSender;
+    
+  }
+  ```
+- Service 테스트를 위한 `given` 데이터 및 `stub` 작성
+  - `given` 데이터는 파라미터로 받게 될 값을 의미함.
+  - `stub`은 `given().willReturn()` 등을 통해 Service에서 주입받게 되는 가짜 객체가 해야할 일과 리턴값을 정의함.
+  - 예시 코드
+    ```java
+    @Test
+    void getBook() {
+    
+    // given
+    Long id = 1L;
+    
+    // stub
+    Book book = Book.builder()
+                    .id(id)
+                    .author("작가1")
+                    .title("제목1")
+                    .build();
+
+    given(bookRepository.findById(anyLong()))
+            .willReturn(Optional.ofNullable(book));
+
+    // when
+    BookResDto findBook = bookService.getBook(id);
+
+    // then
+    assertThat(findBook.getAuthor()).isEqualTo(book.getAuthor());
+    assertThat(findBook.getTitle()).isEqualTo(book.getTitle());
+    
+    }
+  ```
+
+
