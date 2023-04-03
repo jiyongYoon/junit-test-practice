@@ -22,10 +22,9 @@ public class Book {
     private String title;
     private String author;
 
-    public Book update(BookReqDto bookReqDto) {
+    public void update(BookReqDto bookReqDto) {
         this.title = bookReqDto.getTitle();
         this.author = bookReqDto.getAuthor();
-        return this;
     }
 
 }

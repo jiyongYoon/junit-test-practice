@@ -36,7 +36,7 @@ public class BookService {
 
     // 2. 책 목록 보기
     @Transactional(readOnly = true)
-    public List<BookResDto> getAllBook(BookReqDto bookReqDto) {
+    public List<BookResDto> getAllBook() {
         return bookRepository.findAll().stream()
                 .map(BookResDto::toDto)
                 .collect(Collectors.toList());
@@ -60,7 +60,7 @@ public class BookService {
     public BookResDto updateBook(Long id, BookReqDto bookReqDto) {
         Book findBook = bookRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
-        Book updateBook = findBook.update(bookReqDto);
-        return BookResDto.toDto(updateBook);
+        findBook.update(bookReqDto); // jpa-dirty-check
+        return BookResDto.toDto(findBook);
     }
 }
