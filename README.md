@@ -126,7 +126,7 @@ Junit 의존성에 있는 `org.junit.jupiter.api.Assertions` 메서드.
   ```
 
 ### 3) Controller
-
+- 추후 진행 예정..
 
 
 
@@ -183,3 +183,19 @@ Junit 의존성에 있는 `org.junit.jupiter.api.Assertions` 메서드.
     ```
 
 
+## 8. 테스트와 배포
+- 이렇게 로컬 dev 환경에서 개발 및 테스트 코드 작성이 완료되면, 실제 배포 환경과 동일한 테스트 서버에서 한번 더 통합 테스트가 진행되어야 함.
+  ```java
+  @ActiveProfiles("dev")
+  class BookApiControllerTest {
+    ...
+  }
+  ```
+  - 이렇게 각 환경별로 어디서 실행이 될 것인지 표시해두면 자동화가 가능해진다.
+  
+  
+- 테스트가 완료되면 테스트 서버에서 완성된 `jar` 파일을 실제 운영 서버에서 구동하게 되며, 구동 시 환경설정 등을 위해 `application-prod` 파일을 활용하도록 한다.
+
+---
+
+학습자료: [메타코딩 유튜브 Junit 초급 강의](https://www.youtube.com/@metacoding)

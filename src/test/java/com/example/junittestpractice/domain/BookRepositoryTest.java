@@ -3,6 +3,7 @@ package com.example.junittestpractice.domain;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest(showSql = false) // DB와 관련된 컴포넌트만 메모리에 로딩함.
+@ActiveProfiles("dev")
 class BookRepositoryTest {
 
     @Autowired // DI
