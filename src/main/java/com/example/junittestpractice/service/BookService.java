@@ -4,6 +4,7 @@ import com.example.junittestpractice.domain.Book;
 import com.example.junittestpractice.domain.BookRepository;
 import com.example.junittestpractice.util.MailSender;
 import com.example.junittestpractice.web.dto.req.BookReqDto;
+import com.example.junittestpractice.web.dto.res.BookListResDto;
 import com.example.junittestpractice.web.dto.res.BookResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,11 +36,20 @@ public class BookService {
     }
 
     // 2. 책 목록 보기
+//    @Transactional(readOnly = true)
+//    public List<BookResDto> getAllBook() {
+//        return bookRepository.findAll().stream()
+//                .map(BookResDto::toDto)
+//                .collect(Collectors.toList());
+//    }
+
     @Transactional(readOnly = true)
-    public List<BookResDto> getAllBook() {
-        return bookRepository.findAll().stream()
-                .map(BookResDto::toDto)
-                .collect(Collectors.toList());
+    public BookListResDto getAllBook() {
+        return BookListResDto.builder()
+                .bookResDtoList(bookRepository.findAll().stream()
+                        .map(BookResDto::toDto)
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     // 3. 책 한건 보기

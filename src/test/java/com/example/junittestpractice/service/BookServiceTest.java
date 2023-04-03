@@ -4,6 +4,7 @@ import com.example.junittestpractice.domain.Book;
 import com.example.junittestpractice.domain.BookRepository;
 import com.example.junittestpractice.util.MailSender;
 import com.example.junittestpractice.web.dto.req.BookReqDto;
+import com.example.junittestpractice.web.dto.res.BookListResDto;
 import com.example.junittestpractice.web.dto.res.BookResDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -84,12 +85,14 @@ class BookServiceTest {
                 .willReturn(bookList);
 
         // when
-        List<BookResDto> getAllBookList = bookService.getAllBook();
+        BookListResDto getAllBookList = bookService.getAllBook();
 
         // then
-        assertThat(getAllBookList.size()).isEqualTo(bookList.size());
-        assertThat(getAllBookList.get(0).getTitle()).isEqualTo(bookList.get(0).getTitle());
-        assertThat(getAllBookList.get(1).getAuthor()).isEqualTo(bookList.get(1).getAuthor());
+        assertThat(getAllBookList.getBookResDtoList().size()).isEqualTo(bookList.size());
+        assertThat(getAllBookList.getBookResDtoList().get(0).getTitle())
+                .isEqualTo(bookList.get(0).getTitle());
+        assertThat(getAllBookList.getBookResDtoList().get(1).getAuthor())
+                .isEqualTo(bookList.get(1).getAuthor());
     }
 
     @Test
