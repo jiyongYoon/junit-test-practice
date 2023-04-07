@@ -32,7 +32,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
     // assertj
-    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation 'org.assertj:assertj-core:3.24.2'
 
     // validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
